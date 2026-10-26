@@ -20,8 +20,6 @@ SECTIONS = ("properties", "clients", "contracts", "payments")
 
 class DataError(ValueError):
     """User-facing validation or business-rule error."""
-
-
 def positive_int(value, label):
     try:
         n = int(str(value).strip())
@@ -30,8 +28,6 @@ def positive_int(value, label):
     if n <= 0:
         raise DataError(f"{label}: يجب أن يكون أكبر من صفر.")
     return n
-
-
 def nonnegative_int(value, label):
     try:
         n = int(str(value).strip())
@@ -50,8 +46,6 @@ def parse_date(value, label="التاريخ", optional=False):
         return date.fromisoformat(s).isoformat()
     except ValueError:
         raise DataError(f"{label}: يجب استخدام الصيغة YYYY-MM-DD.") from None
-
-
 def clean_required(value, label):
     s = str(value or "").strip()
     if not s:
@@ -60,13 +54,12 @@ def clean_required(value, label):
 
 
 class RealEstateDB:
-    def _init_(self, db_path=DB_FILE):
+    def __init__(self, db_path=DB_FILE):
         self.path = str(db_path)
         self.con = sqlite3.connect(self.path)
         self.con.row_factory = sqlite3.Row
         self.con.execute("PRAGMA foreign_keys = ON")
         self._init_schema()
-
     def close(self):
         self.con.close()
 
@@ -524,7 +517,7 @@ class DataDialog(tk.Toplevel):
         self.wait_visibility()
         self.focus_force()
 
-    def save(self):
+    def save(self):   
         item = {}
         for key, widget in self.inputs.items():
             if isinstance(widget, tk.Text):
@@ -543,7 +536,6 @@ class DataDialog(tk.Toplevel):
             return
         self.parent.refresh_all()
         self.destroy()
-
 
 class RealEstateApp(tk.Tk):
     def __init__(self, db_path=DB_FILE):
